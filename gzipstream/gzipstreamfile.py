@@ -8,7 +8,7 @@ class _GzipStreamFile(object):
     self.decoder = None
     self.restart_decoder()
     ###
-    self.unused_buffer = ''
+    self.unused_buffer = b''
     self.closed = False
     self.finished = False
 
@@ -32,7 +32,7 @@ class _GzipStreamFile(object):
     # If the stream is finished and no unused raw data, return what we have
     if self.stream.closed or self.finished:
       self.finished = True
-      buf, self.unused_buffer = self.unused_buffer, ''
+      buf, self.unused_buffer = self.unused_buffer, b''
       return buf
     # Otherwise consume new data
     raw = self.stream.read(io.DEFAULT_BUFFER_SIZE)
@@ -67,7 +67,7 @@ class GzipStreamFile(io.BufferedReader):
       result = super(GzipStreamFile, self).read(*args, **kwargs)
       return result
     except ValueError:
-      return ''
+      return b''
 
   def readline(self, *args, **kwargs):
     # Patch readline to return '' instead of raise Value Error
@@ -75,4 +75,4 @@ class GzipStreamFile(io.BufferedReader):
       result = super(GzipStreamFile, self).readline(*args, **kwargs)
       return result
     except ValueError:
-      return ''
+      return b''
